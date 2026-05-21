@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Code Review Report - MatchGame</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; padding: 40px; line-height: 1.7; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, #58a6ff, #bc8cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 { font-size: 1.3rem; font-weight: 600; color: #58a6ff; margin-top: 32px; margin-bottom: 12px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+  .score-box { display: inline-block; background: linear-gradient(135deg, #da3633, #f85149); padding: 16px 32px; border-radius: 12px; font-size: 2rem; font-weight: 700; color: #fff; margin: 16px 0; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; text-align: center; }
+  .stat-value { font-size: 1.5rem; font-weight: 700; }
+  .stat-label { font-size: 0.8rem; color: #8b949e; margin-top: 4px; }
+  .stat-critico .stat-value { color: #f85149; }
+  .stat-alto .stat-value { color: #f0883e; }
+  .stat-medio .stat-value { color: #d29922; }
+  .stat-baixo .stat-value { color: #8b949e; }
+  .issue { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin: 10px 0; }
+  .issue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .badge { padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+  .badge-critico { background: #f8514922; color: #f85149; border: 1px solid #f8514944; }
+  .badge-alto { background: #f0883e22; color: #f0883e; border: 1px solid #f0883e44; }
+  .badge-medio { background: #d2992222; color: #d29922; border: 1px solid #d2992244; }
+  .badge-baixo { background: #8b949e22; color: #8b949e; border: 1px solid #8b949e44; }
+  .badge-security { background: #f8514911; color: #ff7b72; }
+  .badge-quality { background: #58a6ff11; color: #58a6ff; }
+  .badge-performance { background: #bc8cff11; color: #bc8cff; }
+  .issue-file { font-family: 'Courier New', monospace; font-size: 0.85rem; color: #58a6ff; }
+  .issue-desc { color: #e6edf3; margin: 6px 0; }
+  .issue-suggestion { background: #0d1117; border-left: 3px solid #238636; padding: 10px 14px; margin-top: 8px; border-radius: 4px; font-size: 0.9rem; color: #8b949e; }
+  .issue-suggestion strong { color: #3fb950; }
+  .summary-text { color: #8b949e; font-size: 1rem; margin: 8px 0 20px 0; }
+  .recommendations { list-style: none; counter-reset: rec; }
+  .recommendations li { counter-increment: rec; padding: 10px 0; border-bottom: 1px solid #21262d; }
+  .recommendations li::before { content: counter(rec) "."; color: #58a6ff; font-weight: 700; margin-right: 8px; }
+  .meta { display: flex; gap: 24px; color: #8b949e; font-size: 0.85rem; margin: 16px 0; flex-wrap: wrap; }
+  .meta span { display: flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Code Review Report</h1>
+  <p class="summary-text">Analise automatizada do repositorio <strong>MatchGame</strong> realizada por 3 agentes de IA especializados (Security, Quality, Performance).</p>
+
+  <div class="meta">
+    <span>134 arquivos analisados</span>
+    <span>45.706 linhas de codigo</span>
+    <span>91.8 segundos de execucao</span>
+  </div>
+
+  <div class="score-box">NOTA: 55/100</div>
+
+  <div class="stats">
+    <div class="stat stat-critico"><div class="stat-value">3</div><div class="stat-label">CRITICOS</div></div>
+    <div class="stat stat-alto"><div class="stat-value">3</div><div class="stat-label">ALTOS</div></div>
+    <div class="stat stat-medio"><div class="stat-value">2</div><div class="stat-label">MEDIOS</div></div>
+    <div class="stat stat-baixo"><div class="stat-value">2</div><div class="stat-label">BAIXOS</div></div>
+  </div>
+
+  <h2>Issues Criticos</h2>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-critico">CRITICO</span>
+      <span class="badge badge-security">SECURITY</span>
+    </div>
+    <div class="issue-file">apps/backend/prisma/seed.ts</div>
+    <div class="issue-desc">Senha hardcoded encontrada no codigo. Isso representa um risco significativo, pois a senha pode ser facilmente descoberta por um atacante.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Remover a senha hardcoded e utilizar variaveis de ambiente. Exemplo: <code>const passwordHash = await bcrypt.hash(process.env.DEFAULT_PASSWORD, 10);</code></div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-critico">CRITICO</span>
+      <span class="badge badge-quality">QUALITY</span>
+    </div>
+    <div class="issue-file">packages/database/src/generated/client/index.d.ts</div>
+    <div class="issue-desc">Arquivo com milhares de linhas de codigo, indicando falta de responsabilidade unica (SRP).</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Este arquivo e auto-gerado pelo Prisma. Considere adiciona-lo ao .gitignore ou configura-lo para gerar em partes menores.</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-critico">CRITICO</span>
+      <span class="badge badge-performance">PERFORMANCE</span>
+    </div>
+    <div class="issue-file">apps/backend/src/modules/matches/matches.controller.ts</div>
+    <div class="issue-desc">O metodo de busca de recomendacoes faz multiplas consultas ao banco de dados para likes, dislikes e blocks, resultando em um problema de N+1 queries.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Utilizar uma unica consulta com JOIN ou usar <code>include</code> do Prisma para buscar todas as informacoes em uma so query.</div>
+  </div>
+
+  <h2>Issues Altos</h2>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-alto">ALTO</span>
+      <span class="badge badge-quality">QUALITY</span>
+    </div>
+    <div class="issue-file">apps/web/src/app/dashboard/page.tsx</div>
+    <div class="issue-desc">Uso excessivo de 'any' em variaveis, comprometendo a tipagem e a seguranca do codigo.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Substituir 'any' por tipos especificos. Crie interfaces para cada estrutura de dados.</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-alto">ALTO</span>
+      <span class="badge badge-quality">QUALITY</span>
+    </div>
+    <div class="issue-file">apps/backend/src/modules/integrations/integrations.controller.ts</div>
+    <div class="issue-desc">Tratamento de erros generico em varias partes do codigo, dificultando a identificacao de problemas especificos.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Implementar tratamento de erros mais especifico e detalhado, utilizando tipos de erro personalizados.</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-alto">ALTO</span>
+      <span class="badge badge-performance">PERFORMANCE</span>
+    </div>
+    <div class="issue-file">apps/backend/src/modules/dashboard/dashboard.controller.ts</div>
+    <div class="issue-desc">O endpoint do dashboard faz multiplas consultas ao banco de dados sem caching, causando lentidao em acessos frequentes.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Implementar caching utilizando Redis para armazenar os resultados das consultas mais frequentes.</div>
+  </div>
+
+  <h2>Issues Medios</h2>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-medio">MEDIO</span>
+      <span class="badge badge-quality">QUALITY</span>
+    </div>
+    <div class="issue-file">apps/web/src/app/profile/page.tsx</div>
+    <div class="issue-desc">Uso de 'any' em variaveis, comprometendo a tipagem.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Substituir 'any' por tipos mais especificos.</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-medio">MEDIO</span>
+      <span class="badge badge-performance">PERFORMANCE</span>
+    </div>
+    <div class="issue-file">apps/backend/src/modules/favorites/favorites.controller.ts</div>
+    <div class="issue-desc">O metodo de busca de favoritos nao possui paginacao, podendo causar lentidao ao retornar muitos registros.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Implementar paginacao com <code>skip</code> e <code>take</code> do Prisma.</div>
+  </div>
+
+  <h2>Issues Baixos</h2>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-baixo">BAIXO</span>
+      <span class="badge badge-quality">QUALITY</span>
+    </div>
+    <div class="issue-file">apps/backend/src/modules/auth/auth.controller.ts</div>
+    <div class="issue-desc">Uso de console.log em codigo de producao.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Remover ou substituir por um logger apropriado como Winston ou Pino.</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="badge badge-baixo">BAIXO</span>
+      <span class="badge badge-performance">PERFORMANCE</span>
+    </div>
+    <div class="issue-file">apps/backend/src/modules/integrations/anime.service.ts</div>
+    <div class="issue-desc">Chamada de API externa sem tratamento de erros adequado ou timeout.</div>
+    <div class="issue-suggestion"><strong>Sugestao:</strong> Implementar um mecanismo de retry com timeout e fallback.</div>
+  </div>
+
+  <h2>Recomendacoes Prioritarias</h2>
+  <ol class="recommendations">
+    <li>Remover senhas hardcoded e utilizar variaveis de ambiente.</li>
+    <li>Resolver o problema de N+1 queries no matches.controller.ts.</li>
+    <li>Implementar caching (Redis) para o endpoint do dashboard.</li>
+    <li>Substituir todos os 'any' por tipos especificos em todo o codigo.</li>
+    <li>Melhorar o tratamento de erros com tipos personalizados.</li>
+  </ol>
+
+  <br>
+  <p style="color:#484f58; font-size:0.8rem; margin-top:32px; border-top:1px solid #21262d; padding-top:16px;">
+    Gerado automaticamente pelo Code Review Agent (LangGraph + GPT-4o-mini) | Desenvolvido por Alexsander Cristofari
+  </p>
+</div>
+</body>
+</html>
